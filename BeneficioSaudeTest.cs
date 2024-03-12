@@ -58,7 +58,10 @@ namespace ClosedXmlTest
             homeCareComplemento="J19",
             elegibilidade="B20",    
             elegibilidadeCnpj="J20",
-            estrategiaCellRange="A22:J30";
+            estrategiaCellRangeTemplate="A22:J30",
+            
+            subEstipulanteTitleCellRangeTemplate="A32:I32",
+            subEstipulanteItemCellRangeTemplate="A33:I33";            
 
         const int estrategiaReferenceLine = 31;
     
@@ -113,10 +116,14 @@ namespace ClosedXmlTest
             wsEstrategia.Cell( elegibilidadeCnpj).SetValue("91.786.878/0001-50");
 
             List<Estrategia> estrategias = MockEstrategias();
-            IXLRange estrategiaBlock = wsEstrategia.Range(estrategiaCellRange);
+            IXLRange estrategiaBlockTemplate = wsEstrategia.Range(estrategiaCellRangeTemplate);
+            IXLRange subEstipulanteTitleBlockTemplate = wsEstrategia.Range(subEstipulanteTitleCellRangeTemplate);
+            IXLRange subEstipulanteItemBlockTemplate = wsEstrategia.Range(subEstipulanteItemCellRangeTemplate);
+
             int referenceLine=estrategiaReferenceLine;
             foreach(var estrategia in estrategias){
-                estrategiaBlock.CopyTo(wsEstrategia.Cell(referenceLine,"A"));
+                subEstipulanteTitleBlockTemplate.InsertRowsAbove(9);
+                estrategiaBlockTemplate.CopyTo(wsEstrategia.Cell(referenceLine,"A"));
                 referenceLine+=2;
                 wsEstrategia.Cell(referenceLine++,"B").SetValue(estrategia.Operadora);
                 wsEstrategia.Cell(referenceLine++,"B").SetValue(estrategia.Plano); 
@@ -125,9 +132,22 @@ namespace ClosedXmlTest
                 wsEstrategia.Cell(referenceLine++,"B").SetValue(estrategia.Vidas); 
                 wsEstrategia.Cell(referenceLine++,"B").SetValue(estrategia.ValorPerCaptita);
                 wsEstrategia.Cell(referenceLine++,"B").SetValue(estrategia.Coparticipacao);
-                //referenceLine++;                                                                                                                        
             }
-            estrategiaBlock.Delete(XLShiftDeletedCells.ShiftCellsUp);
+
+            referenceLine+=3;
+            List<SubEstipulante> subEstipulantes = MockSubEstimulantes();
+            foreach(var subEstipulante in subEstipulantes){
+                subEstipulanteItemBlockTemplate.CopyTo(wsEstrategia.Cell(referenceLine,"A"));
+                wsEstrategia.Cell(referenceLine,"B").SetValue(subEstipulante.RazaoSocial);
+                wsEstrategia.Cell(referenceLine,"H").SetValue(subEstipulante.CNPJ);
+                referenceLine++;                                 
+            }
+
+            subEstipulanteItemBlockTemplate.Delete(XLShiftDeletedCells.ShiftCellsUp);
+            estrategiaBlockTemplate.Delete(XLShiftDeletedCells.ShiftCellsUp);
+
+
+            
             //ABA BASE DE DADOS  ESTUDOS
             var wsBaseDados = workbook.Worksheets.First(x=>x.Name=="BASE DE DADOS  ESTUDOS");
             wsBaseDados.Cell("A2").InsertData(MockBaseDadosSaude());

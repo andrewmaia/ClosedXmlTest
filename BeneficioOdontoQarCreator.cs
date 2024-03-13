@@ -62,15 +62,22 @@ namespace ClosedXmlTest
             prestadorServicoQuantidade="D37",
             informacoesSeguradosObservacoes="G36",
 
+            subEstipulanteItemCellRangeTemplate="A40:I40",
+            estrategiaRange="A42:G61",            
+
             coringa="";
         #endregion
 
         private readonly IXLWorksheet _estrategiaWorkSheet;
         private readonly IXLWorksheet _baseDadosEstudosWorkSheet;            
+        private readonly IXLRange _subEstipulanteItemBlockTemplate;
+        private readonly IXLRange _estrategiaBlock;        
         public BeneficioOdontoQarCreator(Stream templateStream,string? outputFileAddress=null)
             :base(templateStream,outputFileAddress){
            _estrategiaWorkSheet = _workbook.Worksheets.First(x=>x.Name=="ESTRATEGIA");
-           _baseDadosEstudosWorkSheet = _workbook.Worksheets.First(x=>x.Name=="BASE DE DADOS  ESTUDOS");                      
+           _baseDadosEstudosWorkSheet = _workbook.Worksheets.First(x=>x.Name=="BASE DE DADOS  ESTUDOS");    
+           _subEstipulanteItemBlockTemplate = _estrategiaWorkSheet.Range(subEstipulanteItemCellRangeTemplate);
+           _estrategiaBlock=_estrategiaWorkSheet.Range(estrategiaRange);
         }
 
         public override MemoryStream GenerateExcelFile(){        
@@ -81,6 +88,7 @@ namespace ClosedXmlTest
             BuildSectionSubEstipulante();
             BuildSectionEstrategias();
             BuildSectionBaseDadosEstudo();
+            _subEstipulanteItemBlockTemplate.Delete(XLShiftDeletedCells.ShiftCellsUp);                
             return base.GenerateExcelFile();
         }
         private void BuildSectionFormularioContacaoDental(){
@@ -145,7 +153,15 @@ namespace ClosedXmlTest
         }
 
         private void BuildSectionSubEstipulante() {
-            //repete linhas
+            List<SubEstipulanteOdonto> subEstipulantes = MockSubEstimulantes();
+            int referenceLine=_subEstipulanteItemBlockTemplate.RangeAddress.LastAddress.RowNumber+1;            
+            foreach(var subEstipulante in subEstipulantes){
+                _estrategiaBlock.InsertRowsAbove(_subEstipulanteItemBlockTemplate.RowCount());                
+                _subEstipulanteItemBlockTemplate.CopyTo(_estrategiaWorkSheet.Cell(referenceLine,"A"));
+                _estrategiaWorkSheet.Cell(referenceLine,"B").SetValue(subEstipulante.RazaoSocial);
+                _estrategiaWorkSheet.Cell(referenceLine,"F").SetValue(subEstipulante.CNPJ);
+                referenceLine++;                                 
+            }
         }        
 
         private void BuildSectionEstrategias() {
@@ -156,8 +172,34 @@ namespace ClosedXmlTest
 
         }
 
+        #region Mock de Dados
 
+         static List<PessoaOdonto> MockBaseDadosSaude(){
+            return
+            [
+                new("Empresa do Joao", "41.646.207/0001-15", "Masculino", "Identificacao", new DateTime(2000, 1, 1), 24, "Faixa", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500),
+                new("Empresa da Maria", "41.646.207/0001-15", "Feminino", "Identificacao", new DateTime(2000, 1, 1), 24, "Faixa", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500),
+                new("Empresa do Roberto", "41.646.207/0001-15", "Masculino", "Identificacao", new DateTime(2000, 1, 1), 24, "Faixa", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500),
+                new("Empresa do José", "41.646.207/0001-15", "Feminino", "Identificacao", new DateTime(2000, 1, 1), 24, "Faixa", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500), 
+            ];
+ 
+        }
+
+        static List<SubEstipulanteOdonto> MockSubEstimulantes(){
+            return
+            [
+                new("Empresa do Joao", "41.646.207/0001-15")
+                ,new("Empresa da Maria", "41.646.207/0001-14")
+                ,new("Empresa do José", "41.646.207/0001-16")
+            ];
+        }           
+        #endregion
 
 
     }
+
+     #region Classes para Mock
+    record PessoaOdonto(string Empresa, string CNPJ, string Sexo, string Identificacao, DateTime DataNascimento, int Idade, string FaixaEtaria, string Parentesto, string Situacao, string CID, string Municipio, string UF, string Operadora, string Plano, int ValorAtual);
+    record SubEstipulanteOdonto(string RazaoSocial, string CNPJ);    
+    #endregion
 }

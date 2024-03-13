@@ -170,8 +170,7 @@ namespace ClosedXmlTest
         }
         private void BuildSectionSubEstipulante()
         {
-
-            referenceLine+=3;
+            referenceLine+=_subEstipulanteTitleBlockTemplate.RowCount()+ _subEstipulanteItemBlockTemplate.RowCount() + 1;
             List<SubEstipulante> subEstipulantes = MockSubEstimulantes();
             foreach(var subEstipulante in subEstipulantes){
                 _subEstipulanteItemBlockTemplate.CopyTo(_estrategiaWorkSheet.Cell(referenceLine,"A"));
@@ -181,7 +180,6 @@ namespace ClosedXmlTest
             }
 
         }          
-
         private void BuildSectionBaseDadosEstudo()
         {
             _baseDadosEstudosWorkSheet.Cell("A2").InsertData(MockBaseDadosSaude());
@@ -217,7 +215,6 @@ namespace ClosedXmlTest
             ];
         }           
         #endregion
-        
     }
 
 

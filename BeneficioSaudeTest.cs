@@ -8,9 +8,6 @@ namespace ClosedXmlTest
  
     public class BeneficioSaudeTest
     {
-        
-     
-
         #region Endereços de Informação 
 
         const string 
@@ -59,9 +56,10 @@ namespace ClosedXmlTest
             elegibilidade="B20",    
             elegibilidadeCnpj="J20",
             estrategiaCellRangeTemplate="A22:J30",
-            
             subEstipulanteTitleCellRangeTemplate="A32:I32",
-            subEstipulanteItemCellRangeTemplate="A33:I33";            
+            subEstipulanteItemCellRangeTemplate="A33:I33",    
+            estrategiaWorkSheetName = "ESTRATEGIA",
+            baseDadosEstudosWorkSheetName = "BASE DE DADOS  ESTUDOS";                   
 
         const int estrategiaReferenceLine = 31;
 
@@ -74,7 +72,7 @@ namespace ClosedXmlTest
         public  static MemoryStream GenerateExcelFile(Stream templateStream,string? outputFileAddress=null){            
  
             var workbook = new XLWorkbook(templateStream);
-            var wsEstrategia = workbook.Worksheets.First(x=>x.Name=="ESTRATEGIA");
+            var wsEstrategia = workbook.Worksheets.First(x=>x.Name==estrategiaWorkSheetName);
 
             wsEstrategia.Cell(consultor).SetValue("José da Silva");
             wsEstrategia.Cell(razaoSocialEstipulante).SetValue("Razao social Ficticia");
@@ -152,10 +150,9 @@ namespace ClosedXmlTest
             subEstipulanteItemBlockTemplate.Delete(XLShiftDeletedCells.ShiftCellsUp);
             estrategiaBlockTemplate.Delete(XLShiftDeletedCells.ShiftCellsUp);
 
-
-            
+           
             //ABA BASE DE DADOS  ESTUDOS
-            var wsBaseDados = workbook.Worksheets.First(x=>x.Name=="BASE DE DADOS  ESTUDOS");
+            var wsBaseDados = workbook.Worksheets.First(x=>x.Name==baseDadosEstudosWorkSheetName);
             wsBaseDados.Cell("A2").InsertData(MockBaseDadosSaude());
 
             if(!string.IsNullOrEmpty(outputFileAddress))

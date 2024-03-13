@@ -4,15 +4,15 @@ using DocumentFormat.OpenXml.InkML;
 
 namespace ClosedXmlTest
 {
-    record Estrategia(string Operadora, string Plano,string ReembolsoConsulta, string Elegibilidade, string Vidas,decimal ValorPerCaptita, decimal Coparticipacao);
-    record Pessoa(string Empresa, string CNPJ, string Sexo, string Identificacao, DateTime DataNascimento, int Idade, string FaixaEtaria, string Parentesto, string Situacao, string CID, string Municipio, string UF, string Operadora, string Plano, int ValorAtual);
-    record SubEstipulante(string RazaoSocial, string CNPJ);    
+
  
     public class BeneficioSaudeTest
     {
         
-        const string templateAddress = @"C:\Users\andrew.maia\Desktop\QAR\QarSaude_01_Dinamico.xlsx"; 
-        const string outputFileAddress = @"C:\Users\andrew.maia\Desktop\QAR\QarSaude_03_Preenchido.xlsx";       
+     
+
+        #region Endereços de Informação 
+
         const string 
             consultor = "B7", 
             razaoSocialEstipulante="B8",
@@ -64,42 +64,48 @@ namespace ClosedXmlTest
             subEstipulanteItemCellRangeTemplate="A33:I33";            
 
         const int estrategiaReferenceLine = 31;
+
+        #endregion
     
-        public static void GenerateExcelFile(){
+        public  static MemoryStream GenerateExcelFile(string templateAddress,string? outputFileAddress=null){
+            using FileStream fs = new (templateAddress,FileMode.Open);
+            return GenerateExcelFile(fs,outputFileAddress);
+        }
+        public  static MemoryStream GenerateExcelFile(Stream templateStream,string? outputFileAddress=null){            
  
-            var workbook = new XLWorkbook(templateAddress);
+            var workbook = new XLWorkbook(templateStream);
             var wsEstrategia = workbook.Worksheets.First(x=>x.Name=="ESTRATEGIA");
 
             wsEstrategia.Cell(consultor).SetValue("José da Silva");
             wsEstrategia.Cell(razaoSocialEstipulante).SetValue("Razao social Ficticia");
-            wsEstrategia.Cell(estipulanteCnpj ).SetValue("91.786.878/0001-50");
-            wsEstrategia.Cell(operadoraAtual ).SetValue("Bradesco");
-            wsEstrategia.Cell(adaptadoLei ).SetValue("Sim");
-            wsEstrategia.Cell(tempoContrato ).SetValue("2 anos");
-            wsEstrategia.Cell(agregados ).SetValue("Sim");
-            wsEstrategia.Cell(agregadosComplemento ).SetValue("Complemento");
+            wsEstrategia.Cell(estipulanteCnpj).SetValue("91.786.878/0001-50");
+            wsEstrategia.Cell(operadoraAtual).SetValue("Bradesco");
+            wsEstrategia.Cell(adaptadoLei).SetValue("Sim");
+            wsEstrategia.Cell(tempoContrato).SetValue("2 anos");
+            wsEstrategia.Cell(agregados).SetValue("Sim");
+            wsEstrategia.Cell(agregadosComplemento).SetValue("Complemento");
             wsEstrategia.Cell(aniversarioContrato).SetValue(new DateTime(2025,01,31));
-            wsEstrategia.Cell(breakEven ).SetValue("Break Even");
-            wsEstrategia.Cell(afastados ).SetValue("Não");
-            wsEstrategia.Cell(afastadosComplemento ).SetValue("Complemento");
-            wsEstrategia.Cell(possuiMulta ).SetValue("Sim");
-            wsEstrategia.Cell(regraMulta ).SetValue("Alguma Regra");
-            wsEstrategia.Cell(aposentadosPor ).SetValue("Sim");
-            wsEstrategia.Cell(aposentadosPorComplemento ).SetValue("Complemento");
-            wsEstrategia.Cell(relatorioSinistralidade ).SetValue("Sim");
+            wsEstrategia.Cell(breakEven).SetValue("Break Even");
+            wsEstrategia.Cell(afastados).SetValue("Não");
+            wsEstrategia.Cell(afastadosComplemento).SetValue("Complemento");
+            wsEstrategia.Cell(possuiMulta).SetValue("Sim");
+            wsEstrategia.Cell(regraMulta).SetValue("Alguma Regra");
+            wsEstrategia.Cell(aposentadosPor).SetValue("Sim");
+            wsEstrategia.Cell(aposentadosPorComplemento).SetValue("Complemento");
+            wsEstrategia.Cell(relatorioSinistralidade).SetValue("Sim");
             wsEstrategia.Cell(percentualSinistralidade).SetValue( 0.2d);
-            wsEstrategia.Cell(gestantes ).SetValue("Sim");
-            wsEstrategia.Cell(gestantesComplemento ).SetValue("Complemento");
-            wsEstrategia.Cell(modalidadeContrato ).SetValue("Compulsório");
-            wsEstrategia.Cell(haDependentes ).SetValue("Sim");
-            wsEstrategia.Cell(cronicos ).SetValue("Não");
-            wsEstrategia.Cell(cronicosComplemento ).SetValue("Complemento");
-            wsEstrategia.Cell(haReeembolso ).SetValue("Sim");
-            wsEstrategia.Cell(remidos ).SetValue("Não");
-            wsEstrategia.Cell(remidosComplemento ).SetValue("Complemento");
-            wsEstrategia.Cell(coparticipacao ).SetValue("Sim");
-            wsEstrategia.Cell(regraCoparticacao ).SetValue("Alguma Regra");
-            wsEstrategia.Cell(inativos ).SetValue("Sim");
+            wsEstrategia.Cell(gestantes).SetValue("Sim");
+            wsEstrategia.Cell(gestantesComplemento).SetValue("Complemento");
+            wsEstrategia.Cell(modalidadeContrato).SetValue("Compulsório");
+            wsEstrategia.Cell(haDependentes).SetValue("Sim");
+            wsEstrategia.Cell(cronicos).SetValue("Não");
+            wsEstrategia.Cell(cronicosComplemento).SetValue("Complemento");
+            wsEstrategia.Cell(haReeembolso).SetValue("Sim");
+            wsEstrategia.Cell(remidos).SetValue("Não");
+            wsEstrategia.Cell(remidosComplemento).SetValue("Complemento");
+            wsEstrategia.Cell(coparticipacao).SetValue("Sim");
+            wsEstrategia.Cell(regraCoparticacao).SetValue("Alguma Regra");
+            wsEstrategia.Cell(inativos).SetValue("Sim");
             wsEstrategia.Cell( inativosComplemento).SetValue("Complementos");
             wsEstrategia.Cell( regraUpDownGrade).SetValue("Alguma regra");
             wsEstrategia.Cell( prestadorServico).SetValue("Não");
@@ -152,8 +158,17 @@ namespace ClosedXmlTest
             var wsBaseDados = workbook.Worksheets.First(x=>x.Name=="BASE DE DADOS  ESTUDOS");
             wsBaseDados.Cell("A2").InsertData(MockBaseDadosSaude());
 
-            workbook.SaveAs(outputFileAddress);
+            if(!string.IsNullOrEmpty(outputFileAddress))
+                workbook.SaveAs(outputFileAddress);
+
+            MemoryStream outputFileStream= new();
+            workbook.SaveAs(outputFileStream);
+
+            
+            return outputFileStream;
         }
+        
+        #region Mock de Dados
         static List<Estrategia> MockEstrategias(){
             return
             [
@@ -182,10 +197,15 @@ namespace ClosedXmlTest
                 ,new("Empresa do José", "41.646.207/0001-16")
             ];
         }           
+        #endregion
         
     }
 
 
-
+    #region Classes para Mock
+    record Estrategia(string Operadora, string Plano,string ReembolsoConsulta, string Elegibilidade, string Vidas,decimal ValorPerCaptita, decimal Coparticipacao);
+    record Pessoa(string Empresa, string CNPJ, string Sexo, string Identificacao, DateTime DataNascimento, int Idade, string FaixaEtaria, string Parentesto, string Situacao, string CID, string Municipio, string UF, string Operadora, string Plano, int ValorAtual);
+    record SubEstipulante(string RazaoSocial, string CNPJ);    
+    #endregion
     
 }

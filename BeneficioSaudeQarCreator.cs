@@ -6,7 +6,7 @@ namespace ClosedXmlTest
 {
 
  
-    public class BeneficioSaudeQarGenerator
+    public class BeneficioSaudeQarCreator: QarCreator
     {
         #region Endereços de Informação 
 
@@ -64,9 +64,6 @@ namespace ClosedXmlTest
         const int estrategiaReferenceLine = 31;
 
         #endregion
-        private readonly XLWorkbook _workbook;
-        private readonly string? _outputFileAddress;
-
         private int referenceLine;        
 
         private readonly IXLWorksheet _estrategiaWorkSheet;
@@ -74,9 +71,8 @@ namespace ClosedXmlTest
         private readonly IXLRange _estrategiaBlockTemplate;
         private readonly IXLRange _subEstipulanteTitleBlockTemplate;             
         private readonly IXLRange _subEstipulanteItemBlockTemplate;                     
-        public BeneficioSaudeQarGenerator(Stream templateStream,string? outputFileAddress=null){
-           _workbook= new XLWorkbook(templateStream);
-           _outputFileAddress = outputFileAddress;
+        public BeneficioSaudeQarCreator(Stream templateStream,string? outputFileAddress=null)
+            :base(templateStream,outputFileAddress){
            _estrategiaWorkSheet = _workbook.Worksheets.First(x=>x.Name==estrategiaWorkSheetName);                
            _baseDadosEstudosWorkSheet = _workbook.Worksheets.First(x=>x.Name==baseDadosEstudosWorkSheetName);           
            _estrategiaBlockTemplate = _estrategiaWorkSheet.Range(estrategiaCellRangeTemplate);
@@ -84,7 +80,7 @@ namespace ClosedXmlTest
            _subEstipulanteItemBlockTemplate = _estrategiaWorkSheet.Range(subEstipulanteItemCellRangeTemplate);                                    
         }
 
-        public  MemoryStream GenerateExcelFile(){            
+        public override MemoryStream GenerateExcelFile(){            
             BuildSectionFormularioContacaoSaude();
             BuildSectionEstrategia();
             BuildSectionSubEstipulante();
@@ -92,13 +88,7 @@ namespace ClosedXmlTest
             _estrategiaBlockTemplate.Delete(XLShiftDeletedCells.ShiftCellsUp);            
             _subEstipulanteItemBlockTemplate.Delete(XLShiftDeletedCells.ShiftCellsUp);            
 
-            if(!string.IsNullOrEmpty(_outputFileAddress))
-                _workbook.SaveAs(_outputFileAddress);
-
-            MemoryStream outputFileStream= new();
-            _workbook.SaveAs(outputFileStream);
-            
-            return outputFileStream;
+            return base.GenerateExcelFile();
         }
 
         private void BuildSectionFormularioContacaoSaude()

@@ -210,7 +210,7 @@ namespace ClosedXmlTest
 
     #region Classes para Mock
     record Estrategia(string Operadora, string Plano,string ReembolsoConsulta, string Elegibilidade, string Vidas,decimal ValorPerCaptita, decimal Coparticipacao);
-    record Pessoa(string Empresa, string CNPJ, string Sexo, string Identificacao, DateTime DataNascimento, int Idade, string FaixaEtaria, string Parentesto, string Situacao, string CID, string Municipio, string UF, string Operadora, string Plano, int ValorAtual);
+    record Pessoa(string Empresa, string CNPJ, string Sexo, string Identificacao, DateTime DataNascimento, int Idade, string FaixaEtaria, string Parentesco, string Situacao, string CID, string Municipio, string UF, string Operadora, string Plano, int ValorAtual);
     record SubEstipulante(string RazaoSocial, string CNPJ);    
     #endregion
     

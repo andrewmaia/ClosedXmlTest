@@ -165,11 +165,12 @@ namespace ClosedXmlTest
         }        
 
         private void BuildSectionEstrategias() {
-            
+            var blockLines = _estrategiaBlock.Rows().ToList();
+            blockLines[1].Cell(1).SetValue("Estrategia");
         }        
 
         private void BuildSectionBaseDadosEstudo(){
-
+            _baseDadosEstudosWorkSheet.Cell("A2").InsertData(MockBaseDadosSaude());
         }
 
         #region Mock de Dados
@@ -177,10 +178,10 @@ namespace ClosedXmlTest
          static List<PessoaOdonto> MockBaseDadosSaude(){
             return
             [
-                new("Empresa do Joao", "41.646.207/0001-15", "Masculino", "Identificacao", new DateTime(2000, 1, 1), 24, "Faixa", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500),
-                new("Empresa da Maria", "41.646.207/0001-15", "Feminino", "Identificacao", new DateTime(2000, 1, 1), 24, "Faixa", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500),
-                new("Empresa do Roberto", "41.646.207/0001-15", "Masculino", "Identificacao", new DateTime(2000, 1, 1), 24, "Faixa", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500),
-                new("Empresa do José", "41.646.207/0001-15", "Feminino", "Identificacao", new DateTime(2000, 1, 1), 24, "Faixa", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500), 
+                new("Empresa do Joao", "41.646.207/0001-15", "Identificacao", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500),
+                new("Empresa do Maria", "41.646.207/0001-15", "Identificacao", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500),
+                new("Empresa do Jose", "41.646.207/0001-15", "Identificacao", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500),
+                new("Empresa do Ricardo", "41.646.207/0001-15", "Identificacao", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500),
             ];
  
         }
@@ -199,7 +200,7 @@ namespace ClosedXmlTest
     }
 
      #region Classes para Mock
-    record PessoaOdonto(string Empresa, string CNPJ, string Sexo, string Identificacao, DateTime DataNascimento, int Idade, string FaixaEtaria, string Parentesto, string Situacao, string CID, string Municipio, string UF, string Operadora, string Plano, int ValorAtual);
+    record PessoaOdonto(string Empresa, string CNPJ,string Matricuka,string Parentesco, string Situacao, string CID, string Municipio, string UF, string Operadora, string Plano, int ValorAtual);
     record SubEstipulanteOdonto(string RazaoSocial, string CNPJ);    
     #endregion
 }

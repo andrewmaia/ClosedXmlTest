@@ -31,6 +31,37 @@ namespace ClosedXmlTest
             contribuicaoDependente="B21",    
             contribuicaoDependenteEmpresa="F21", 
             elegibilidade = "B22",
+            titularesQuantidade = "B27",
+            titularesNomePlano = "D27",
+            titularesQuantidadeVidas = "E27",
+            titularesReembolsoConsulta = "F27",
+
+            dependentesQuantidade = "B28",
+            dependentesNomePlano = "D28",
+            dependentesQuantidadeVidas = "E28",
+            dependentesReembolsoConsulta = "F28",
+
+            agregadosQuantidade = "B29",
+            agregadosNomePlano = "D29",
+            agregadosQuantidadeVidas = "E29",
+            agregadosReembolsoConsulta = "F29",
+            totalVidasPlanoQuantidade = "B30",
+            totalVidasPlanoNomePlano = "D30",
+            totalVidasPlanoQuantidadeVidas = "E30",
+            totalVidasPlanoReembolsoConsulta = "F30",
+            totalFuncionariosFgtsQuantidade = "B31",
+            totalFuncionariosFgtsNomePlano = "D31",
+            totalFuncionariosFgtsQuantidadeVidas = "E31",
+            totalFuncionariosFgtsReembolsoConsulta = "F31",
+            categoriaPlanosAtuaisObservacoes="G27",
+            informacoesSeguradosAgregadosSimNao="B36",
+            informacoesSeguradosAgregadosGrauParentesco="C36",
+            informacoesSeguradosAgregadosQuantidade="D36",
+            prestadorServicoSimNao="B37",
+            prestadorServicoGrauParentesco="C37",
+            prestadorServicoQuantidade="D37",
+            informacoesSeguradosObservacoes="G36",
+
             coringa="";
         #endregion
 
@@ -79,11 +110,38 @@ namespace ClosedXmlTest
         }
         
         private void BuildSectionCategoriaPlanosAtuaisValoresPercapta() {
-            
+            _estrategiaWorkSheet.Cell(titularesQuantidade).SetValue(10);
+            _estrategiaWorkSheet.Cell(titularesNomePlano).SetValue("Plano A");            
+            _estrategiaWorkSheet.Cell(titularesQuantidadeVidas).SetValue(10);                        
+            _estrategiaWorkSheet.Cell(titularesReembolsoConsulta).SetValue(100);                                    
+            _estrategiaWorkSheet.Cell(dependentesQuantidade).SetValue(20);                                                
+            _estrategiaWorkSheet.Cell(dependentesNomePlano).SetValue("Plano B");
+            _estrategiaWorkSheet.Cell(dependentesQuantidadeVidas).SetValue(20);
+            _estrategiaWorkSheet.Cell(dependentesReembolsoConsulta).SetValue(150);
+            _estrategiaWorkSheet.Cell(agregadosQuantidade).SetValue(30);            
+            _estrategiaWorkSheet.Cell(agregadosNomePlano).SetValue("Plano C");                        
+            _estrategiaWorkSheet.Cell(agregadosQuantidadeVidas).SetValue(30);                                    
+            _estrategiaWorkSheet.Cell(agregadosReembolsoConsulta).SetValue(250);                                                
+            _estrategiaWorkSheet.Cell(totalVidasPlanoQuantidade).SetValue(40);                                                            
+            _estrategiaWorkSheet.Cell(totalVidasPlanoNomePlano).SetValue("Plano D");                                                                        
+            _estrategiaWorkSheet.Cell(totalVidasPlanoQuantidadeVidas).SetValue(15);
+            _estrategiaWorkSheet.Cell(totalVidasPlanoReembolsoConsulta).SetValue(100);
+            _estrategiaWorkSheet.Cell(totalFuncionariosFgtsQuantidade).SetValue(50);            
+            _estrategiaWorkSheet.Cell(totalFuncionariosFgtsNomePlano).SetValue("Plano E");
+            _estrategiaWorkSheet.Cell(totalFuncionariosFgtsQuantidadeVidas).SetValue(40);            
+            _estrategiaWorkSheet.Cell(totalFuncionariosFgtsReembolsoConsulta).SetValue(180);                        
+            _estrategiaWorkSheet.Cell(categoriaPlanosAtuaisObservacoes).SetValue("Observações....");                                    
         }
 
         private void BuildSectionInformacoesSegurados() {
-            
+
+            _estrategiaWorkSheet.Cell(informacoesSeguradosAgregadosSimNao).SetValue("Sim");            
+            _estrategiaWorkSheet.Cell(informacoesSeguradosAgregadosGrauParentesco).SetValue("Grau Parentesco");
+            _estrategiaWorkSheet.Cell(informacoesSeguradosAgregadosQuantidade).SetValue(50);           
+            _estrategiaWorkSheet.Cell(prestadorServicoSimNao).SetValue("Sim");            
+            _estrategiaWorkSheet.Cell(prestadorServicoGrauParentesco).SetValue("Grau Parentesco");
+            _estrategiaWorkSheet.Cell(prestadorServicoQuantidade).SetValue(50);                         
+            _estrategiaWorkSheet.Cell(informacoesSeguradosObservacoes).SetValue("Observações...");                                     
         }
 
         private void BuildSectionSubEstipulante() {

@@ -84,7 +84,7 @@ namespace ClosedXmlTest
            _subEstipulanteItemBlockTemplate = _estrategiaWorkSheet.Range(subEstipulanteItemCellRangeTemplate);                                    
         }
 
-        public   MemoryStream GenerateExcelFile(){            
+        public  MemoryStream GenerateExcelFile(){            
             BuildSectionFormularioContacaoSaude();
             BuildSectionEstrategia();
             BuildSectionSubEstipulante();
@@ -155,7 +155,7 @@ namespace ClosedXmlTest
 
             referenceLine=estrategiaReferenceLine;
             foreach(var estrategia in estrategias){
-                _subEstipulanteTitleBlockTemplate.InsertRowsAbove(9);
+                _subEstipulanteTitleBlockTemplate.InsertRowsAbove(_estrategiaBlockTemplate.RowCount());
                 _estrategiaBlockTemplate.CopyTo(_estrategiaWorkSheet.Cell(referenceLine,"A"));
                 referenceLine+=2;
                 _estrategiaWorkSheet.Cell(referenceLine++,"B").SetValue(estrategia.Operadora);

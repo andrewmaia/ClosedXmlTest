@@ -84,7 +84,6 @@ namespace ClosedXmlTest
             BuildSectionFormularioContacaoDental();
             BuildSectionCategoriaPlanosAtuaisValoresPercapta();
             BuildSectionInformacoesSegurados();
-            BuildSectionInformacoesSegurados();
             BuildSectionSubEstipulante();
             BuildSectionEstrategias();
             BuildSectionBaseDadosEstudo();
@@ -170,12 +169,12 @@ namespace ClosedXmlTest
         }        
 
         private void BuildSectionBaseDadosEstudo(){
-            _baseDadosEstudosWorkSheet.Cell("A2").InsertData(MockBaseDadosSaude());
+            _baseDadosEstudosWorkSheet.Cell("A2").InsertData(MockBaseDadoOdonto());
         }
 
         #region Mock de Dados
 
-         static List<PessoaOdonto> MockBaseDadosSaude(){
+         static List<PessoaOdonto> MockBaseDadoOdonto(){
             return
             [
                 new("Empresa do Joao", "41.646.207/0001-15", "Identificacao", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500),

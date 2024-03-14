@@ -141,34 +141,37 @@ namespace ClosedXmlTest
         private void BuildSectionEstrategia()
         {
 
-            List<Estrategia> estrategias = MockEstrategias();
+            List<EstrategiaSaude> estrategias = MockEstrategias();
 
             referenceLine=estrategiaReferenceLine;
             foreach(var estrategia in estrategias){
                 _subEstipulanteTitleBlockTemplate.InsertRowsAbove(_estrategiaBlockTemplate.RowCount());
                 _estrategiaBlockTemplate.CopyTo(_estrategiaWorkSheet.Cell(referenceLine,"A"));
                 referenceLine+=2;
-                _estrategiaWorkSheet.Cell(referenceLine++,"B").SetValue(estrategia.Operadora);
-                _estrategiaWorkSheet.Cell(referenceLine++,"B").SetValue(estrategia.Plano); 
-                _estrategiaWorkSheet.Cell(referenceLine++,"B").SetValue(estrategia.ReembolsoConsulta); 
-                _estrategiaWorkSheet.Cell(referenceLine++,"B").SetValue(estrategia.Elegibilidade);
-                _estrategiaWorkSheet.Cell(referenceLine++,"B").SetValue(estrategia.Vidas); 
-                _estrategiaWorkSheet.Cell(referenceLine++,"B").SetValue(estrategia.ValorPerCaptita);
-                _estrategiaWorkSheet.Cell(referenceLine++,"B").SetValue(estrategia.Coparticipacao);
+                _estrategiaWorkSheet.Cell(referenceLine+1,"J").SetValue(estrategia.Observacoes);
+                for(int i=0;i<estrategia.Produtos.Count && i<8;i++){
+                    var rowPosition= referenceLine;                    
+                    _estrategiaWorkSheet.Cell(rowPosition++,i+2).SetValue(estrategia.Produtos[i].Operadora);
+                    _estrategiaWorkSheet.Cell(rowPosition++,i+2).SetValue(estrategia.Produtos[i].Plano); 
+                    _estrategiaWorkSheet.Cell(rowPosition++,i+2).SetValue(estrategia.Produtos[i].ReembolsoConsulta);
+                    _estrategiaWorkSheet.Cell(rowPosition++,i+2).SetValue(estrategia.Produtos[i].Elegibilidade);
+                    _estrategiaWorkSheet.Cell(rowPosition++,i+2).SetValue(estrategia.Produtos[i].Vidas);
+                    _estrategiaWorkSheet.Cell(rowPosition++,i+2).SetValue(estrategia.Produtos[i].ValorPerCaptita);
+                    _estrategiaWorkSheet.Cell(rowPosition++,i+2).SetValue(estrategia.Produtos[i].Coparticipacao);
+                }
+                referenceLine+=7;
             }            
-
         }
         private void BuildSectionSubEstipulante()
         {
             referenceLine+=_subEstipulanteTitleBlockTemplate.RowCount()+ _subEstipulanteItemBlockTemplate.RowCount() + 1;
-            List<SubEstipulante> subEstipulantes = MockSubEstimulantes();
+            List<SubEstipulanteSaude> subEstipulantes = MockSubEstimulantes();
             foreach(var subEstipulante in subEstipulantes){
                 _subEstipulanteItemBlockTemplate.CopyTo(_estrategiaWorkSheet.Cell(referenceLine,"A"));
                 _estrategiaWorkSheet.Cell(referenceLine,"B").SetValue(subEstipulante.RazaoSocial);
                 _estrategiaWorkSheet.Cell(referenceLine,"H").SetValue(subEstipulante.CNPJ);
                 referenceLine++;                                 
             }
-
         }          
         private void BuildSectionBaseDadosEstudo()
         {
@@ -176,16 +179,51 @@ namespace ClosedXmlTest
         }
 
         #region Mock de Dados
-        static List<Estrategia> MockEstrategias(){
+        List<EstrategiaSaude> MockEstrategias(){
             return
             [
-                 new ("Operadora", "Plano A", "Sim","Elegibilidade","Vidas",10,0.2M)
-                ,new ("Operadora", "Plano B", "Sim","Elegibilidade","Vidas",10,0.15M)
-                ,new ("Operadora", "Plano C", "Sim","Elegibilidade","Vidas",10,0.3M)
+                 new (MockProdutos1(),"Observacao estrategia 1")
+                ,new (MockProdutos2(),"Observacao estrategia 2")
+                ,new (MockProdutos3(),"Observacao estrategia 3")
             ];
-        }          
+        }     
 
-         static List<Pessoa> MockBaseDadosSaude(){
+        List<ProdutoSaude> MockProdutos1(){
+            return
+            [
+                 new ("Operadora A", "Plano A", "Sim","Elegibilidade","Vidas",10,0.2M)
+                ,new ("Operadora B", "Plano B", "Sim","Elegibilidade","Vidas",10,0.15M)
+                ,new ("Operadora C", "Plano C", "Sim","Elegibilidade","Vidas",10,0.3M)
+            ];            
+        }
+
+        List<ProdutoSaude> MockProdutos2(){
+            return
+            [
+                 new ("Operadora A", "Plano A", "Sim","Elegibilidade","Vidas",10,0.2M)
+                ,new ("Operadora B", "Plano B", "Sim","Elegibilidade","Vidas",10,0.15M)
+                ,new ("Operadora C", "Plano C", "Sim","Elegibilidade","Vidas",10,0.2M)
+                ,new ("Operadora D", "Plano D", "Sim","Elegibilidade","Vidas",10,0.15M)                
+                ,new ("Operadora E", "Plano E", "Sim","Elegibilidade","Vidas",10,0.2M)                
+            ];            
+        }
+
+        List<ProdutoSaude> MockProdutos3(){
+            return
+            [
+                 new ("Operadora A", "Plano A", "Sim","Elegibilidade","Vidas",10,0.2M)
+                ,new ("Operadora B", "Plano B", "Sim","Elegibilidade","Vidas",10,0.15M)
+                ,new ("Operadora C", "Plano C", "Sim","Elegibilidade","Vidas",10,0.2M)
+                ,new ("Operadora D", "Plano D", "Sim","Elegibilidade","Vidas",10,0.15M)                
+                ,new ("Operadora E", "Plano E", "Sim","Elegibilidade","Vidas",10,0.2M)
+                ,new ("Operadora F", "Plano F", "Sim","Elegibilidade","Vidas",10,0.15M)
+                ,new ("Operadora G", "Plano G", "Sim","Elegibilidade","Vidas",10,0.2M)
+                ,new ("Operadora H", "Plano H", "Sim","Elegibilidade","Vidas",10,0.15M)
+            ];            
+        }
+
+
+        List<PessoaSaude> MockBaseDadosSaude(){
             return
             [
                 new("Empresa do Joao", "41.646.207/0001-15", "Masculino", "Identificacao", new DateTime(2000, 1, 1), 24, "Faixa", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500),
@@ -196,7 +234,7 @@ namespace ClosedXmlTest
  
         }
 
-        static List<SubEstipulante> MockSubEstimulantes(){
+        List<SubEstipulanteSaude> MockSubEstimulantes(){
             return
             [
                 new("Empresa do Joao", "41.646.207/0001-15")
@@ -209,9 +247,10 @@ namespace ClosedXmlTest
 
 
     #region Classes para Mock
-    record Estrategia(string Operadora, string Plano,string ReembolsoConsulta, string Elegibilidade, string Vidas,decimal ValorPerCaptita, decimal Coparticipacao);
-    record Pessoa(string Empresa, string CNPJ, string Sexo, string Identificacao, DateTime DataNascimento, int Idade, string FaixaEtaria, string Parentesco, string Situacao, string CID, string Municipio, string UF, string Operadora, string Plano, int ValorAtual);
-    record SubEstipulante(string RazaoSocial, string CNPJ);    
+    record EstrategiaSaude(List<ProdutoSaude> Produtos,string Observacoes);
+    record ProdutoSaude(string Operadora, string Plano,string ReembolsoConsulta, string Elegibilidade, string Vidas,decimal ValorPerCaptita, decimal Coparticipacao);
+    record PessoaSaude(string Empresa, string CNPJ, string Sexo, string Identificacao, DateTime DataNascimento, int Idade, string FaixaEtaria, string Parentesco, string Situacao, string CID, string Municipio, string UF, string Operadora, string Plano, int ValorAtual);
+    record SubEstipulanteSaude(string RazaoSocial, string CNPJ);    
     #endregion
     
 }

@@ -178,6 +178,14 @@ namespace ClosedXmlTest
             incapacidadeAcidenteFilhosPercentual="F44",
             incapacidadeAcidenteFilhosValor="G44",
 
+            nomeCoberturaExtra="A45",
+            coberturaExtraTitularPercentual="B45",
+            coberturaExtraTitularValor="C45",
+            coberturaExtraConjugePercentual="D45",
+            coberturaExtraConjugeValor="E45",
+            coberturaExtraFilhosPercentual="F45",
+            coberturaExtraFilhosValor="G45",          
+
             coringa="";
         #endregion
         private readonly IXLWorksheet _estrategiaWorkSheet;
@@ -368,6 +376,16 @@ namespace ClosedXmlTest
             _estrategiaWorkSheet.Cell(incapacidadeAcidenteConjugeValor).SetValue(200);
             _estrategiaWorkSheet.Cell(incapacidadeAcidenteFilhosPercentual).SetValue(0.22);
             _estrategiaWorkSheet.Cell(incapacidadeAcidenteFilhosValor).SetValue(300);
+
+
+            _estrategiaWorkSheet.Cell(nomeCoberturaExtra).SetValue("ALGUMA COBERTURA EXTRA");
+            _estrategiaWorkSheet.Cell(coberturaExtraTitularPercentual).SetValue(0.25);
+            _estrategiaWorkSheet.Cell(coberturaExtraTitularValor).SetValue(100);
+            _estrategiaWorkSheet.Cell(coberturaExtraConjugePercentual).SetValue(0.35);
+            _estrategiaWorkSheet.Cell(coberturaExtraConjugeValor).SetValue(200);
+            _estrategiaWorkSheet.Cell(coberturaExtraFilhosPercentual).SetValue(0.22);
+            _estrategiaWorkSheet.Cell(coberturaExtraFilhosValor).SetValue(300);
+     
         }
 
         private void BuildSectionInformacoesSegurados() {

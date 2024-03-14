@@ -185,15 +185,39 @@ namespace ClosedXmlTest
             coberturaExtraConjugeValor="E45",
             coberturaExtraFilhosPercentual="F45",
             coberturaExtraFilhosValor="G45",          
-
-            coringa="";
         #endregion
+
+        #region Endereços Informações Segurados
+            agregados="B49",
+            agregadosQuantidade="C49",     
+            informacoesSeguradoObservacao="I49",
+        #endregion
+
+        #region Endereços Células Condições da Apolice Atual
+            regraDpsImplantacao="B54",            
+            regraDpsNovasAdesoes="B55",
+            limiteIdadeNovasInclusoes="B56",    
+        #endregion
+
+        #region Ranges de templates
+            subEstipulanteItemCellRangeTemplate="A60:H60",
+            importanteRange ="A62:H68",
+            estrategiaRange ="A70:H81";
+
+         #endregion
         private readonly IXLWorksheet _estrategiaWorkSheet;
-        private readonly IXLWorksheet _baseDadosEstudosWorkSheet;            
+        private readonly IXLWorksheet _baseDadosEstudosWorkSheet;     
+        private readonly IXLRange _subEstipulanteItemBlockTemplate;               
+
+        private readonly IXLRange _importanteBlock;         
+        private readonly IXLRange _estrategiaBlock; 
         public BeneficioVidaQarCreator(Stream templateStream,string? outputFileAddress=null)
             :base(templateStream,outputFileAddress){
            _estrategiaWorkSheet = _workbook.Worksheets.First(x=>x.Name=="ESTRATEGIA");
            _baseDadosEstudosWorkSheet = _workbook.Worksheets.First(x=>x.Name=="BASE DE DADOS  ESTUDOS");
+           _subEstipulanteItemBlockTemplate = _estrategiaWorkSheet.Range(subEstipulanteItemCellRangeTemplate);          
+           _importanteBlock=_estrategiaWorkSheet.Range(importanteRange);                       
+           _estrategiaBlock=_estrategiaWorkSheet.Range(estrategiaRange);           
         }
 
         public override MemoryStream GenerateExcelFile(){        
@@ -204,6 +228,7 @@ namespace ClosedXmlTest
             BuildSectionSubEstipulante();
             BuildSectionEstrategias();
             BuildSectionBaseDadosEstudo();
+            _subEstipulanteItemBlockTemplate.Delete(XLShiftDeletedCells.ShiftCellsUp);            
             return base.GenerateExcelFile();
         }
         private void BuildSectionFormularioContacaoVida(){
@@ -389,21 +414,35 @@ namespace ClosedXmlTest
         }
 
         private void BuildSectionInformacoesSegurados() {
-
+            _estrategiaWorkSheet.Cell(agregados).SetValue("Sim");
+            _estrategiaWorkSheet.Cell(agregadosQuantidade).SetValue(100);
+            _estrategiaWorkSheet.Cell(informacoesSeguradoObservacao).SetValue("Observações...");
         }
         private void BuildSectionCondicoesApoliceAtual() {
-
+            _estrategiaWorkSheet.Cell(regraDpsImplantacao).SetValue("Regra 1");
+            _estrategiaWorkSheet.Cell(regraDpsNovasAdesoes).SetValue("Regra 2");
+            _estrategiaWorkSheet.Cell(limiteIdadeNovasInclusoes).SetValue("Regra 3");
         }           
 
         private void BuildSectionSubEstipulante() {
-
+            List<SubEstipulanteVida> subEstipulantes = MockSubEstimulantes();
+            int referenceLine=_subEstipulanteItemBlockTemplate.RangeAddress.LastAddress.RowNumber+1;            
+            foreach(var subEstipulante in subEstipulantes){
+                _importanteBlock.InsertRowsAbove(_subEstipulanteItemBlockTemplate.RowCount());                
+                _subEstipulanteItemBlockTemplate.CopyTo(_estrategiaWorkSheet.Cell(referenceLine,"A"));
+                _estrategiaWorkSheet.Cell(referenceLine,"B").SetValue(subEstipulante.RazaoSocial);
+                _estrategiaWorkSheet.Cell(referenceLine,"H").SetValue(subEstipulante.CNPJ);
+                referenceLine++;                                 
+            }
         }        
 
         private void BuildSectionEstrategias() {
+            var blockLines = _estrategiaBlock.Rows().ToList();
+            blockLines[1].Cell(1).SetValue("Estrategia...");            
         }        
 
         private void BuildSectionBaseDadosEstudo(){
-
+            _baseDadosEstudosWorkSheet.Cell("A2").InsertData(MockBaseDadosVida());
         }
 
         #region Mock de Dados
@@ -411,10 +450,9 @@ namespace ClosedXmlTest
          static List<PessoaVida> MockBaseDadosVida(){
             return
             [
-                new("Empresa do Joao", "41.646.207/0001-15", "Identificacao", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500),
-                new("Empresa do Maria", "41.646.207/0001-15", "Identificacao", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500),
-                new("Empresa do Jose", "41.646.207/0001-15", "Identificacao", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500),
-                new("Empresa do Ricardo", "41.646.207/0001-15", "Identificacao", "Pai", "Situacao", "11111111", "Santos", "SP", "Bradesco", "Plano Bradesco", 500),
+                new("Empresa do Joao", "41.646.207/0001-15", "M","11111111", new DateTime(2000,1,1),20,"Faixa Etaria", "Cargo",100,100,"Situação","CID"),
+                new("Empresa da Maria", "41.646.207/0001-15", "M","11111111", new DateTime(2000,1,1),20,"Faixa Etaria", "Cargo",100,100,"Situação","CID"),
+                new("Empresa do Roberto", "41.646.207/0001-15", "M","11111111", new DateTime(2000,1,1),20,"Faixa Etaria", "Cargo",100,100,"Situação","CID"),                                
             ];
  
         }
@@ -431,7 +469,7 @@ namespace ClosedXmlTest
     }
 
     #region Classes para Mock
-    record PessoaVida(string Empresa, string CNPJ,string Matricuka,string Parentesco, string Situacao, string CID, string Municipio, string UF, string Operadora, string Plano, int ValorAtual);
+    record PessoaVida(string Empresa, string CNPJ,string Sexo,string Identificacao,DateTime DataNascimento,int Idade,string FaixaEtaria,string Cargo, decimal Salario, decimal CapitalSegurado, string Situacao,string CID);
     record SubEstipulanteVida(string RazaoSocial, string CNPJ);    
     #endregion
 }

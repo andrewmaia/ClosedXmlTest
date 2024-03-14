@@ -1,4 +1,5 @@
-﻿using ClosedXmlTest;
+﻿using System.Text;
+using ClosedXmlTest;
 
 // Beneficio - Saude
 /*const string beneficioSaudeTemplateAddress = @"C:\Users\andrew.maia\Desktop\QAR\QarSaude_01_Dinamico.xlsx"; 
@@ -21,5 +22,4 @@ const string beneficioVidaOutputFileAddress = @"C:\Users\andrew.maia\Desktop\QAR
 using FileStream beneficioVidaTemplateStream = new(beneficioVidaTemplateAddress,FileMode.Open);
 QarCreator  bv= new BeneficioVidaQarCreator(beneficioVidaTemplateStream,beneficioVidaOutputFileAddress);
 using Stream beneficioVidaSpreadSheet = bv.GenerateExcelFile();
-
 

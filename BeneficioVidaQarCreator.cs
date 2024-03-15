@@ -5,7 +5,7 @@ namespace ClosedXmlTest
 {
     public class BeneficioVidaQarCreator: QarCreator
     {
-        #region Endereços Formulario Cotacao Vida
+        #region Endereços Células Seção Formulario Cotacao Vida
         const string
             consultor = "B7",
             razaoSocialEstipulante = "B8",     
@@ -27,9 +27,9 @@ namespace ClosedXmlTest
             custeioSeguro="B18", 
             sinistralidade="B19",
 
-            #endregion
+        #endregion
 
-        #region Endereços Categoria Planos Atuais Valores Percapta
+        #region Endereços Células Seção Categoria Planos Atuais Valores Percapta
             categoriaPlanosAtuaisValoresPercaptaObservacao="I24",
             basicaTitularPercentual="B24",
             basicaTitularValor="C24",
@@ -187,28 +187,35 @@ namespace ClosedXmlTest
             coberturaExtraFilhosValor="G45",          
         #endregion
 
-        #region Endereços Informações Segurados
+        #region Endereços Células Seção Informações Segurados
             agregados="B49",
             agregadosQuantidade="C49",     
             informacoesSeguradoObservacao="I49",
         #endregion
 
-        #region Endereços Células Condições da Apolice Atual
+        #region Endereços  Células Seção Condições da Apolice Atual
             regraDpsImplantacao="B54",            
             regraDpsNovasAdesoes="B55",
             limiteIdadeNovasInclusoes="B56",    
         #endregion
 
-        #region Ranges de templates
-            subEstipulanteItemCellRangeTemplate="A60:H60",
+        #region Endereços Endereços Células Seção SubEstipulantes
+         subEstipulanteItemCellRangeTemplate="A60:H60",        
+        #endregion
+ 
+        #region Endereços Células Seção Importante
+
             importanteRange ="A62:H68",
+        #endregion
+        
+        #region Endereços Células Seção Estratégia
+
             estrategiaRange ="A70:H81";
 
          #endregion
         private readonly IXLWorksheet _estrategiaWorkSheet;
         private readonly IXLWorksheet _baseDadosEstudosWorkSheet;     
         private readonly IXLRange _subEstipulanteItemBlockTemplate;               
-
         private readonly IXLRange _importanteBlock;         
         private readonly IXLRange _estrategiaBlock; 
         public BeneficioVidaQarCreator(Stream templateStream,string? outputFileAddress=null)
@@ -252,7 +259,6 @@ namespace ClosedXmlTest
             _estrategiaWorkSheet.Cell(custeioSeguro).SetValue("Sim");            
             _estrategiaWorkSheet.Cell(sinistralidade).SetValue(0.25);
         }
-        
         private void BuildSectionCategoriaPlanosAtuaisValoresPercapta() {
             _estrategiaWorkSheet.Cell(categoriaPlanosAtuaisValoresPercaptaObservacao).SetValue("Observações...");            
             _estrategiaWorkSheet.Cell(basicaTitularPercentual).SetValue(0.25);
@@ -412,7 +418,6 @@ namespace ClosedXmlTest
             _estrategiaWorkSheet.Cell(coberturaExtraFilhosValor).SetValue(300);
      
         }
-
         private void BuildSectionInformacoesSegurados() {
             _estrategiaWorkSheet.Cell(agregados).SetValue("Sim");
             _estrategiaWorkSheet.Cell(agregadosQuantidade).SetValue(100);
@@ -423,7 +428,6 @@ namespace ClosedXmlTest
             _estrategiaWorkSheet.Cell(regraDpsNovasAdesoes).SetValue("Regra 2");
             _estrategiaWorkSheet.Cell(limiteIdadeNovasInclusoes).SetValue("Regra 3");
         }           
-
         private void BuildSectionSubEstipulante() {
             List<SubEstipulanteVida> subEstipulantes = MockSubEstimulantes();
             int referenceLine=_subEstipulanteItemBlockTemplate.RangeAddress.LastAddress.RowNumber+1;            
@@ -435,19 +439,16 @@ namespace ClosedXmlTest
                 referenceLine++;                                 
             }
         }        
-
         private void BuildSectionEstrategias() {
             var blockLines = _estrategiaBlock.Rows().ToList();
             blockLines[1].Cell(1).SetValue("Estrategia...");            
         }        
-
         private void BuildSectionBaseDadosEstudo(){
             _baseDadosEstudosWorkSheet.Cell("A2").InsertData(MockBaseDadosVida());
         }
 
         #region Mock de Dados
-
-         static List<PessoaVida> MockBaseDadosVida(){
+        List<PessoaVida> MockBaseDadosVida(){
             return
             [
                 new("Empresa do Joao", "41.646.207/0001-15", "M","11111111", new DateTime(2000,1,1),20,"Faixa Etaria", "Cargo",100,100,"Situação","CID"),
@@ -456,8 +457,7 @@ namespace ClosedXmlTest
             ];
  
         }
-
-        static List<SubEstipulanteVida> MockSubEstimulantes(){
+        List<SubEstipulanteVida> MockSubEstimulantes(){
             return
             [
                 new("Empresa do Joao", "41.646.207/0001-15")

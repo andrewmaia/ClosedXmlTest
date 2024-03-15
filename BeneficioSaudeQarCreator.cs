@@ -4,11 +4,9 @@ using DocumentFormat.OpenXml.InkML;
 
 namespace ClosedXmlTest
 {
-
- 
     public class BeneficioSaudeQarCreator: QarCreator
     {
-        #region Endereços de Informação 
+        #region Endereços Células Formulario Cotação Saude
 
         const string 
             consultor = "B7", 
@@ -55,15 +53,18 @@ namespace ClosedXmlTest
             homeCareComplemento="J19",
             elegibilidade="B20",    
             elegibilidadeCnpj="J20",
-            estrategiaCellRangeTemplate="A22:J30",
-            subEstipulanteTitleCellRangeTemplate="A32:I32",
-            subEstipulanteItemCellRangeTemplate="A33:I33",    
-            estrategiaWorkSheetName = "ESTRATEGIA",
-            baseDadosEstudosWorkSheetName = "BASE DE DADOS  ESTUDOS";                   
-
-        const int estrategiaReferenceLine = 31;
-
         #endregion
+
+        #region Endereços Células Estratégia
+            estrategiaCellRangeTemplate="A22:J30",
+        #endregion            
+
+        #region Endereços Células Subestipulantes        
+            subEstipulanteTitleCellRangeTemplate="A32:I32",
+            subEstipulanteItemCellRangeTemplate="A33:I33";    
+        #endregion
+
+        const int estrategiaReferenceLine = 31;        
         private int referenceLine;        
 
         private readonly IXLWorksheet _estrategiaWorkSheet;
@@ -73,13 +74,12 @@ namespace ClosedXmlTest
         private readonly IXLRange _subEstipulanteItemBlockTemplate;                     
         public BeneficioSaudeQarCreator(Stream templateStream,string? outputFileAddress=null)
             :base(templateStream,outputFileAddress){
-           _estrategiaWorkSheet = _workbook.Worksheets.First(x=>x.Name==estrategiaWorkSheetName);                
-           _baseDadosEstudosWorkSheet = _workbook.Worksheets.First(x=>x.Name==baseDadosEstudosWorkSheetName);           
+           _estrategiaWorkSheet = _workbook.Worksheets.First(x=>x.Name=="ESTRATEGIA");                
+           _baseDadosEstudosWorkSheet = _workbook.Worksheets.First(x=>x.Name=="BASE DE DADOS  ESTUDOS");           
            _estrategiaBlockTemplate = _estrategiaWorkSheet.Range(estrategiaCellRangeTemplate);
            _subEstipulanteTitleBlockTemplate = _estrategiaWorkSheet.Range(subEstipulanteTitleCellRangeTemplate);          
            _subEstipulanteItemBlockTemplate = _estrategiaWorkSheet.Range(subEstipulanteItemCellRangeTemplate);                                    
         }
-
         public override MemoryStream GenerateExcelFile(){            
             BuildSectionFormularioContacaoSaude();
             BuildSectionEstrategia();
@@ -90,7 +90,6 @@ namespace ClosedXmlTest
 
             return base.GenerateExcelFile();
         }
-
         private void BuildSectionFormularioContacaoSaude()
         {
             _estrategiaWorkSheet.Cell(consultor).SetValue("José da Silva");
@@ -140,7 +139,6 @@ namespace ClosedXmlTest
         }
         private void BuildSectionEstrategia()
         {
-
             List<EstrategiaSaude> estrategias = MockEstrategias();
 
             referenceLine=estrategiaReferenceLine;
@@ -187,7 +185,6 @@ namespace ClosedXmlTest
                 ,new (MockProdutos3(),"Observacao estrategia 3")
             ];
         }     
-
         List<ProdutoSaude> MockProdutos1(){
             return
             [
@@ -196,7 +193,6 @@ namespace ClosedXmlTest
                 ,new ("Operadora C", "Plano C", "Sim","Elegibilidade","Vidas",10,0.3M)
             ];            
         }
-
         List<ProdutoSaude> MockProdutos2(){
             return
             [
@@ -207,7 +203,6 @@ namespace ClosedXmlTest
                 ,new ("Operadora E", "Plano E", "Sim","Elegibilidade","Vidas",10,0.2M)                
             ];            
         }
-
         List<ProdutoSaude> MockProdutos3(){
             return
             [
@@ -221,8 +216,6 @@ namespace ClosedXmlTest
                 ,new ("Operadora H", "Plano H", "Sim","Elegibilidade","Vidas",10,0.15M)
             ];            
         }
-
-
         List<PessoaSaude> MockBaseDadosSaude(){
             return
             [
@@ -233,7 +226,6 @@ namespace ClosedXmlTest
             ];
  
         }
-
         List<SubEstipulanteSaude> MockSubEstimulantes(){
             return
             [
@@ -244,13 +236,11 @@ namespace ClosedXmlTest
         }           
         #endregion
     }
-
-
     #region Classes para Mock
     record EstrategiaSaude(List<ProdutoSaude> Produtos,string Observacoes);
     record ProdutoSaude(string Operadora, string Plano,string ReembolsoConsulta, string Elegibilidade, string Vidas,decimal ValorPerCaptita, decimal Coparticipacao);
     record PessoaSaude(string Empresa, string CNPJ, string Sexo, string Identificacao, DateTime DataNascimento, int Idade, string FaixaEtaria, string Parentesco, string Situacao, string CID, string Municipio, string UF, string Operadora, string Plano, int ValorAtual);
     record SubEstipulanteSaude(string RazaoSocial, string CNPJ);    
     #endregion
-    
+   
 }

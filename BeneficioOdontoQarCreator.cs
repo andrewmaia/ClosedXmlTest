@@ -5,7 +5,7 @@ namespace ClosedXmlTest
 {
     public class BeneficioOdontoQarCreator: QarCreator
     {
-        #region Endereços de Informação 
+        #region Endereços Células Seção Informação 
         const string 
             consultor = "B7",
             razaoSocialEstipulante = "B8",
@@ -31,6 +31,9 @@ namespace ClosedXmlTest
             contribuicaoDependente="B21",    
             contribuicaoDependenteEmpresa="F21", 
             elegibilidade = "B22",
+        #endregion
+
+        #region Endereços Células Seção Categoria  de Planos Atuais e Valores Percapta
             titularesQuantidade = "B27",
             titularesNomePlano = "D27",
             titularesQuantidadeVidas = "E27",
@@ -54,15 +57,25 @@ namespace ClosedXmlTest
             totalFuncionariosFgtsQuantidadeVidas = "E31",
             totalFuncionariosFgtsReembolsoConsulta = "F31",
             categoriaPlanosAtuaisObservacoes="G27",
+
+        #endregion
+
+        #region Endereços Células Seção Informações do Segurado
             informacoesSeguradosAgregadosSimNao="B36",
             informacoesSeguradosAgregadosGrauParentesco="C36",
             informacoesSeguradosAgregadosQuantidade="D36",
             prestadorServicoSimNao="B37",
             prestadorServicoGrauParentesco="C37",
             prestadorServicoQuantidade="D37",
-            informacoesSeguradosObservacoes="G36",
 
+            informacoesSeguradosObservacoes="G36",            
+        #endregion            
+
+        #region Endereços Células Seção Subestipulantes
             subEstipulanteItemCellRangeTemplate="A40:I40",
+        #endregion
+
+        #region Endereços Células Seção Estratégias            
             estrategiaRange="A42:G61",            
 
             coringa="";
@@ -79,7 +92,6 @@ namespace ClosedXmlTest
            _subEstipulanteItemBlockTemplate = _estrategiaWorkSheet.Range(subEstipulanteItemCellRangeTemplate);
            _estrategiaBlock=_estrategiaWorkSheet.Range(estrategiaRange);
         }
-
         public override MemoryStream GenerateExcelFile(){        
             BuildSectionFormularioContacaoDental();
             BuildSectionCategoriaPlanosAtuaisValoresPercapta();
@@ -115,7 +127,6 @@ namespace ClosedXmlTest
             _estrategiaWorkSheet.Cell(contribuicaoDependenteEmpresa).SetValue(0.8);
             _estrategiaWorkSheet.Cell(elegibilidade).SetValue("Elegibilidade XPTO");
         }
-        
         private void BuildSectionCategoriaPlanosAtuaisValoresPercapta() {
             _estrategiaWorkSheet.Cell(titularesQuantidade).SetValue(10);
             _estrategiaWorkSheet.Cell(titularesNomePlano).SetValue("Plano A");            
@@ -139,9 +150,7 @@ namespace ClosedXmlTest
             _estrategiaWorkSheet.Cell(totalFuncionariosFgtsReembolsoConsulta).SetValue(180);                        
             _estrategiaWorkSheet.Cell(categoriaPlanosAtuaisObservacoes).SetValue("Observações....");                                    
         }
-
         private void BuildSectionInformacoesSegurados() {
-
             _estrategiaWorkSheet.Cell(informacoesSeguradosAgregadosSimNao).SetValue("Sim");            
             _estrategiaWorkSheet.Cell(informacoesSeguradosAgregadosGrauParentesco).SetValue("Grau Parentesco");
             _estrategiaWorkSheet.Cell(informacoesSeguradosAgregadosQuantidade).SetValue(50);           
@@ -150,7 +159,6 @@ namespace ClosedXmlTest
             _estrategiaWorkSheet.Cell(prestadorServicoQuantidade).SetValue(50);                         
             _estrategiaWorkSheet.Cell(informacoesSeguradosObservacoes).SetValue("Observações...");                                     
         }
-
         private void BuildSectionSubEstipulante() {
             List<SubEstipulanteOdonto> subEstipulantes = MockSubEstimulantes();
             int referenceLine=_subEstipulanteItemBlockTemplate.RangeAddress.LastAddress.RowNumber+1;            
@@ -162,18 +170,15 @@ namespace ClosedXmlTest
                 referenceLine++;                                 
             }
         }        
-
         private void BuildSectionEstrategias() {
             var blockLines = _estrategiaBlock.Rows().ToList();
             blockLines[1].Cell(1).SetValue("Estrategia");
         }        
-
         private void BuildSectionBaseDadosEstudo(){
             _baseDadosEstudosWorkSheet.Cell("A2").InsertData(MockBaseDadoOdonto());
         }
 
         #region Mock de Dados
-
          static List<PessoaOdonto> MockBaseDadoOdonto(){
             return
             [
@@ -184,7 +189,6 @@ namespace ClosedXmlTest
             ];
  
         }
-
         static List<SubEstipulanteOdonto> MockSubEstimulantes(){
             return
             [
@@ -194,11 +198,9 @@ namespace ClosedXmlTest
             ];
         }           
         #endregion
-
-
     }
 
-     #region Classes para Mock
+    #region Classes para Mock
     record PessoaOdonto(string Empresa, string CNPJ,string Matricuka,string Parentesco, string Situacao, string CID, string Municipio, string UF, string Operadora, string Plano, int ValorAtual);
     record SubEstipulanteOdonto(string RazaoSocial, string CNPJ);    
     #endregion
